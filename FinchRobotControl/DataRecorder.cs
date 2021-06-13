@@ -86,6 +86,7 @@ namespace FinchRobotControl
         }
         internal static void GetLightDataRecorderData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
         {
+            int[] allSensorData = new int[numberOfDataPoints];
             int[] leftLightArray = new int[numberOfDataPoints];
             int leftLight = 0;
 
@@ -95,8 +96,6 @@ namespace FinchRobotControl
             Console.WriteLine($"Number of Data Points: {numberOfDataPoints}");
             Console.WriteLine($"Data Point Frequency: {dataPointFrequency}\n");
             Console.WriteLine("Starting Light recording\n");
-
-            string menuChoice = Console.ReadLine();
 
             int awaitTime = (int)(dataPointFrequency * 100);
 
@@ -109,8 +108,10 @@ namespace FinchRobotControl
                 rightLightArray[x] = rightLight;
 
                 finchRobot.wait(awaitTime);
+                Console.WriteLine($"{leftLightArray[x]}, {rightLightArray[x]}");
 
             }
+
             DisplaySensorData(leftLightArray, rightLightArray);
 
             Program.DisplayContinuePrompt();
@@ -119,6 +120,7 @@ namespace FinchRobotControl
         private static void DisplaySensorData(int[] leftLightArray, int[] rightLightArray)
         {
             Console.Clear();
+
             if(leftLightArray.Length == rightLightArray.Length)
             {
                 Array.Sort(leftLightArray);
@@ -130,12 +132,12 @@ namespace FinchRobotControl
                     Console.WriteLine($" {leftLightArray[i]}                   {rightLightArray[i]}");
                 }
             }
-
+            Console.WriteLine();
             Console.WriteLine($"The sum of the left light levels is {leftLightArray.Sum()}");
-            Console.WriteLine($"The average light level from the left sensor is {leftLightArray.Average()}\n");
+            Console.WriteLine($"The average light level from the left sensor is {leftLightArray.Average():n2}\n");
 
-            Console.WriteLine($"The sum of the left light levels is {rightLightArray.Sum()}");
-            Console.WriteLine($"The average light level from the left sensor is {rightLightArray.Average()}");
+            Console.WriteLine($"The sum of the right light levels is {rightLightArray.Sum()}");
+            Console.WriteLine($"The average light level from the right sensor is {rightLightArray.Average():n2}");
 
         }
     }

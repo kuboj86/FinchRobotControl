@@ -8,10 +8,6 @@ namespace FinchRobotControl
 {
     class Program
     {
-        /// <summary>
-        /// first method run when the app starts up
-        /// </summary>
-        /// <param name="args"></param>
         static void Main(string[] args)
         {
             SetTheme();
@@ -21,9 +17,6 @@ namespace FinchRobotControl
             DisplayClosingScreen();
         }
 
-        /// <summary>
-        /// setup the console theme
-        /// </summary>
         static void SetTheme()
         {
             Console.ForegroundColor = ConsoleColor.DarkBlue;
@@ -57,7 +50,7 @@ namespace FinchRobotControl
                 Console.WriteLine("\td) Alarm System");
                 Console.WriteLine("\te) User Programming");
                 Console.WriteLine("\tf) Disconnect Finch Robot");
-                Console.WriteLine("\tq) Quit");
+                Console.WriteLine("\tq) Quit\n");
                 Console.Write("\t\tEnter Choice:");
                 menuChoice = Console.ReadLine().ToLower();
 
