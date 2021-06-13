@@ -8,6 +8,17 @@ namespace FinchRobotControl
 {
     class Program
     {
+        // **************************************************
+        //
+        // Title: Finch Control - Menu Starter
+        // Description: Starter solution with the helper methods,
+        //              opening and closing screens, and the menu
+        // Application Type: Console
+        // Author: Jason Kubo
+        // Dated Created: 1/22/2020
+        // Last Modified: 6/13/2021
+        //
+        // **************************************************
         static void Main(string[] args)
         {
             SetTheme();

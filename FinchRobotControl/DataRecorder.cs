@@ -75,7 +75,7 @@ namespace FinchRobotControl
                 "Temp".PadLeft(10));
             Console.WriteLine(
                 "___________".PadLeft(10) +
-                "___________".PadLeft(10));
+                "___________".PadLeft(10)); 
 
             for (int i = 0; i < data.Length; i++)
             {
@@ -86,6 +86,7 @@ namespace FinchRobotControl
         }
         internal static void GetLightDataRecorderData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
         {
+            
             int[] allSensorData = new int[numberOfDataPoints];
             int[] leftLightArray = new int[numberOfDataPoints];
             int leftLight = 0;
