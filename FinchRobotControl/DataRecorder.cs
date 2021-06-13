@@ -34,7 +34,7 @@ namespace FinchRobotControl
         internal static double[] GetDataRecorderData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
         {
             double[] temperatures = new double[numberOfDataPoints];
-
+            double tempCelsius = 0;
             Program.DisplayScreenHeader("Get Data");
 
             Console.WriteLine($"Number of Data Points: {numberOfDataPoints}");
@@ -45,7 +45,8 @@ namespace FinchRobotControl
 
             for (int i = 0; i < numberOfDataPoints; i++)
             {
-                temperatures[i] = finchRobot.getTemperature();
+                tempCelsius = finchRobot.getTemperature();
+                temperatures[i] = ConvertCelsiusToFahrenheit(tempCelsius);
                 Console.WriteLine($"Reading {i + 1}: {temperatures[i].ToString("n2")}");
                 finchRobot.wait(awaitTime);
             }
@@ -53,6 +54,10 @@ namespace FinchRobotControl
             Program.DisplayContinuePrompt();
 
             return temperatures;
+        }
+        private static double ConvertCelsiusToFahrenheit(double tempCelsius)
+        {
+            return (tempCelsius * 1.8) + 32;
         }
 
         internal static void DisplayData(double[] temperatures)
