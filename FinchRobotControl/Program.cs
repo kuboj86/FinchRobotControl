@@ -198,51 +198,55 @@ namespace FinchRobotControl
         #region DATA RECORDER
         private static void DataRecorderDisplayMenuScreen(FinchAPI.Finch finchRobot)
         {
+            bool quitDataRecorderMenu = false;
+            int numberOfDataPoints = 0;
+            double dataPointFrequency = 0;
+            double[] temperatues = null;
 
-            int numberOfDataPoints;
-            double dataPointFrequency;
-            double[] temperatues;
-
-            DisplayScreenHeader("Data Recorder Menu");
-
-            Console.WriteLine("\ta) Number of Data Points");
-            Console.WriteLine("\tb) Frequency of Data Points");
-            Console.WriteLine("\tc) Get Data");
-            Console.WriteLine("\td) Show Data");
-            Console.WriteLine("\tq) Return to Main Menu");
-            Console.Write("\t\tEnter Choice:");
-
-            string menuChoice = Console.ReadLine();
-            switch (menuChoice)
+            while (!quitDataRecorderMenu)
             {
-                case "a":
-                    TalentShowDisplayLightAndSound(finchRobot);
-                    break;
+                DisplayScreenHeader("Data Recorder Menu");
 
-                case "b":
+                Console.WriteLine("\ta) Number of Data Points");
+                Console.WriteLine("\tb) Frequency of Data Points");
+                Console.WriteLine("\tc) Get Data");
+                Console.WriteLine("\td) Show Data");
+                Console.WriteLine("\tq) Return to Main Menu");
+                Console.Write("\t\tEnter Choice:");
 
-                    break;
+                string menuChoice = Console.ReadLine();
+                switch (menuChoice)
+                {
+                    case "a":
+                        numberOfDataPoints = DataRecorder.GetNumberOfDataPoints();
+                        break;
 
-                case "c":
+                    case "b":
+                        dataPointFrequency = DataRecorder.GetDataPointFrequency();
+                        break;
 
-                    break;
+                    case "c":
+                        temperatues = DataRecorder.GetDataRecorderData(numberOfDataPoints, dataPointFrequency, finchRobot);
+                        break;
 
-                case "d":
+                    case "d":
+                        DataRecorder.DisplayData(temperatues);
+                        break;
 
-                    break;
+                    case "q":
+                        quitDataRecorderMenu = true;
+                        break;
 
-                case "q":
-                    quitTalentShowMenu = true;
-                    break;
-
-                default:
-                    Console.WriteLine();
-                    Console.WriteLine("\tPlease enter a letter for the menu choice.");
-                    DisplayContinuePrompt();
-                    break;
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("\tPlease enter a letter for the menu choice.");
+                        DisplayContinuePrompt();
+                        break;
+                }
             }
-            throw new NotImplementedException();
         }
+
+
         #endregion
 
         #region FINCH ROBOT MANAGEMENT
@@ -343,7 +347,7 @@ namespace FinchRobotControl
         /// <summary>
         /// display continue prompt
         /// </summary>
-        static void DisplayContinuePrompt()
+        public static void DisplayContinuePrompt()
         {
             Console.WriteLine();
             Console.WriteLine("\tPress any key to continue.");
@@ -363,7 +367,7 @@ namespace FinchRobotControl
         /// <summary>
         /// display screen header
         /// </summary>
-        static void DisplayScreenHeader(string headerText)
+        public static void DisplayScreenHeader(string headerText)
         {
             Console.Clear();
             Console.WriteLine();
