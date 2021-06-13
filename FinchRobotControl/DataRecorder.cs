@@ -31,8 +31,9 @@ namespace FinchRobotControl
             return dataPointFrequency;
         }
 
-        internal static double[] GetDataRecorderData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
+        internal static double[] GetTemperatureDataRecorderData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
         {
+
             double[] temperatures = new double[numberOfDataPoints];
             double tempCelsius = 0;
             Program.DisplayScreenHeader("Get Data");
@@ -67,7 +68,7 @@ namespace FinchRobotControl
             Program.DisplayContinuePrompt();
 
         }
-        internal static void DisplayDataTable(double[] temperatures)
+        internal static void DisplayDataTable(double[] data)
         {
             Console.WriteLine(
                 "Recording #".PadLeft(10) +
@@ -76,12 +77,66 @@ namespace FinchRobotControl
                 "___________".PadLeft(10) +
                 "___________".PadLeft(10));
 
-            for (int i = 0; i < temperatures.Length; i++)
+            for (int i = 0; i < data.Length; i++)
             {
                 Console.WriteLine(
                     (i + 1).ToString().PadLeft(10) +
-                    temperatures[i].ToString("n2").PadLeft(10));
+                    data[i].ToString("n2").PadLeft(10));
             }
+        }
+        internal static void GetLightDataRecorderData(int numberOfDataPoints, double dataPointFrequency, Finch finchRobot)
+        {
+            int[] leftLightArray = new int[numberOfDataPoints];
+            int leftLight = 0;
+
+            int[] rightLightArray = new int[numberOfDataPoints];
+            int rightLight = 0;
+
+            Console.WriteLine($"Number of Data Points: {numberOfDataPoints}");
+            Console.WriteLine($"Data Point Frequency: {dataPointFrequency}\n");
+            Console.WriteLine("Starting Light recording\n");
+
+            string menuChoice = Console.ReadLine();
+
+            int awaitTime = (int)(dataPointFrequency * 100);
+
+            for (int x = 0; x < numberOfDataPoints; x++)
+            {
+                leftLight = finchRobot.getLeftLightSensor();
+                leftLightArray[x] = leftLight;
+
+                rightLight = finchRobot.getRightLightSensor();
+                rightLightArray[x] = rightLight;
+
+                finchRobot.wait(awaitTime);
+
+            }
+            DisplaySensorData(leftLightArray, rightLightArray);
+
+            Program.DisplayContinuePrompt();
+        }
+
+        private static void DisplaySensorData(int[] leftLightArray, int[] rightLightArray)
+        {
+            Console.Clear();
+            if(leftLightArray.Length == rightLightArray.Length)
+            {
+                Array.Sort(leftLightArray);
+                Array.Sort(rightLightArray);
+                Console.WriteLine($"Left Sensor Values: | Right Sensor Values:\n");
+
+                for (int i = 0; i < leftLightArray.Length; i++)
+                {
+                    Console.WriteLine($" {leftLightArray[i]}                   {rightLightArray[i]}");
+                }
+            }
+
+            Console.WriteLine($"The sum of the left light levels is {leftLightArray.Sum()}");
+            Console.WriteLine($"The average light level from the left sensor is {leftLightArray.Average()}\n");
+
+            Console.WriteLine($"The sum of the left light levels is {rightLightArray.Sum()}");
+            Console.WriteLine($"The average light level from the left sensor is {rightLightArray.Average()}");
+
         }
     }
 }

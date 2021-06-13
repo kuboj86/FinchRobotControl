@@ -209,8 +209,9 @@ namespace FinchRobotControl
 
                 Console.WriteLine("\ta) Number of Data Points");
                 Console.WriteLine("\tb) Frequency of Data Points");
-                Console.WriteLine("\tc) Get Data");
-                Console.WriteLine("\td) Show Data");
+                Console.WriteLine("\tc) Get Temperature Data");
+                Console.WriteLine("\td) Get Light Data");
+                Console.WriteLine("\te) Show Data");
                 Console.WriteLine("\tq) Return to Main Menu");
                 Console.Write("\t\tEnter Choice:");
 
@@ -226,10 +227,14 @@ namespace FinchRobotControl
                         break;
 
                     case "c":
-                        temperatues = DataRecorder.GetDataRecorderData(numberOfDataPoints, dataPointFrequency, finchRobot);
+                        temperatues = DataRecorder.GetTemperatureDataRecorderData(numberOfDataPoints, dataPointFrequency, finchRobot);
                         break;
 
                     case "d":
+                        DataRecorder.GetLightDataRecorderData(numberOfDataPoints, dataPointFrequency, finchRobot);
+                        break;
+
+                    case "e":
                         DataRecorder.DisplayData(temperatues);
                         break;
 
