@@ -42,7 +42,7 @@ namespace FinchRobotControl
             Console.WriteLine($"Data Point Frequency: {dataPointFrequency}\n");
             Console.WriteLine("Starting temperature recording\n");
 
-            int awaitTime = (int)(dataPointFrequency * 100);
+            int awaitTime = (int)(dataPointFrequency * 1000);
 
             for (int i = 0; i < numberOfDataPoints; i++)
             {
