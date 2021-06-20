@@ -6,6 +6,30 @@ namespace FinchRobotControl
 {
     public class Validation
     {
+        public static string ValidateMonitorType(string message)
+        {
+            bool isValid = false;
+            string choice = "";
+
+            while (!isValid)
+            {
+                Console.WriteLine(message);
+                string input = Console.ReadLine().ToLower();
+                if (input == "light" || input == "temperature" || input == "both")
+                {
+                    isValid = true;
+                    choice = input;
+                }
+                else
+                {
+                    isValid = false;
+                    Console.Clear();
+                    Console.WriteLine("Im sorry I didn't quite understand your response.\n");
+                }
+            }
+
+            return choice;
+        }
         public static int ValidateIntResponse(string message)
         {
             Console.WriteLine(message);
@@ -34,31 +58,52 @@ namespace FinchRobotControl
                 return ValidateDoubleResponse("I'm sorry I didn't quite get that answer.\n");
             }
         }
-
-        public static string ValidateYesNo(string message)
+        public static string ValidateSensorOption(string message)
         {
-            bool isValid = true;
-            string answer = "";
-            while (isValid)
+            bool isValid = false;
+            string choice = "";
+            
+            while (!isValid)
             {
                 Console.WriteLine(message);
                 string input = Console.ReadLine().ToLower();
-                if (input == "y")
+                if (input == "left" || input == "right" || input == "both")
                 {
-                    isValid = false;
-                    answer = "yes";
-                }
-                else if (input == "n")
-                {
-                    isValid = false;
+                    isValid = true;
+                    choice = input;
                 }
                 else
                 {
-                    isValid = true;
-                    ValidateYesNo("Im sorry I didn't quite understand your response.\n");
+                    isValid = false;
+                    Console.Clear();
+                    Console.WriteLine("Im sorry I didn't quite understand your response.\n");
                 }
             }
-            return answer;
+
+            return choice;
+        }
+        public static string ValidateRangeTypeOption(string message)
+        {
+            bool isValid = false;
+            string choice = "";
+
+            while (!isValid)
+            {
+                Console.WriteLine(message);
+                string input = Console.ReadLine().ToLower();
+                if (input == "minimum" || input == "maximum")
+                {
+                    isValid = true;
+                    choice = input;
+                }
+                else
+                {
+                    isValid = false;
+                    Console.Clear();
+                    Console.WriteLine("Im sorry I didn't quite understand your response.\n");
+                }
+            }
+            return choice;
         }
     }
 }

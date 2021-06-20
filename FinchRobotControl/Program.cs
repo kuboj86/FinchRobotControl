@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FinchAPI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -83,7 +84,7 @@ namespace FinchRobotControl
                         break;
 
                     case "d":
-
+                        AlarmDisplayMenuScreen(finchRobot);
                         break;
 
                     case "e":
@@ -108,6 +109,8 @@ namespace FinchRobotControl
 
             } while (!quitApplication);
         }
+
+
 
         #region TALENT SHOW
 
@@ -200,7 +203,7 @@ namespace FinchRobotControl
         #endregion
 
         #region DATA RECORDER
-        private static void DataRecorderDisplayMenuScreen(FinchAPI.Finch finchRobot)
+        private static void DataRecorderDisplayMenuScreen(Finch finchRobot)
         {
             bool quitDataRecorderMenu = false;
             int numberOfDataPoints = 0;
@@ -255,6 +258,177 @@ namespace FinchRobotControl
             }
         }
 
+        #endregion
+        #region AlarmSystem
+        private static void AlarmDisplayMenuScreen(Finch finchRobot)
+        {
+            bool quitDataRecorderMenu = false;
+            string monitorType;
+
+            while (!quitDataRecorderMenu)
+            {
+                DisplayScreenHeader("Light Alarm Menu");
+
+                Console.WriteLine("\ta) Monitor Light or Temperature");
+                Console.WriteLine("\tq) Return to Main Menu");
+                Console.Write("\t\tEnter Choice:");
+
+                string menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+                    case "a":
+                        monitorType = AlarmSystem.GetTypeToMonitor();
+                        if (monitorType == "light")
+                        {
+                            SetLightSensorAlarm(finchRobot);
+                        }
+                        else if(monitorType == "temperature")
+                        {
+                            SetTemperatureSensorAlarm(finchRobot);
+                        }
+                        else
+                        {
+                            SetAlarmTempAndLight(finchRobot);
+                        }
+                        break;
+
+                    case "q":
+                        quitDataRecorderMenu = true;
+                        break;
+
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("\tPlease enter a letter for the menu choice.");
+                        DisplayContinuePrompt();
+                        break;
+                }
+            }
+        }
+
+        private static void SetAlarmTempAndLight(Finch finchRobot)
+        {
+            bool quitDataRecorderMenu = false;
+
+            List<AlarmSystem> LightAndTemp = new List<AlarmSystem>();
+            AlarmSystem temp = new AlarmSystem();
+            temp.monitorType = "temperature";
+            
+            AlarmSystem light = new AlarmSystem();
+            light.monitorType = "light";
+
+
+        }
+
+        private static void SetTemperatureSensorAlarm(Finch finchRobot)
+        {
+            bool quitDataRecorderMenu = false;
+
+            AlarmSystem alarm = new AlarmSystem();
+            alarm.monitorType = "temperature";
+            while (!quitDataRecorderMenu)
+            {
+                DisplayScreenHeader("Temperature Alarm Menu");
+
+                Console.WriteLine("\ta) Set Range Type");
+                Console.WriteLine("\tb) Set Minimum/Maximum Threshold Value");
+                Console.WriteLine("\tc) Set Time to Monitor");
+                Console.WriteLine("\td) Set Alarm");
+                Console.WriteLine("\tq) Return to Main Menu");
+                Console.Write("\t\tEnter Choice:");
+
+                string menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+
+                    case "a":
+                        alarm.rangeType = AlarmSystem.SetRangeType();
+                        break;
+
+                    case "b":
+                        alarm.minMaxThresholdValue = AlarmSystem.SetMinMaxThresholdValue(alarm, finchRobot);
+                        break;
+
+                    case "c":
+                        alarm.timeToMonitor = AlarmSystem.SetTimeToMonitor(alarm.monitorType);
+                        break;
+
+                    case "d":
+                        AlarmSystem.SetTemperatureAlarm(finchRobot, alarm);
+                        break;
+
+                    case "q":
+                        quitDataRecorderMenu = true;
+                        break;
+
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("\tPlease enter a letter for the menu choice.");
+                        DisplayContinuePrompt();
+                        break;
+                }
+            }
+        }
+
+        private static void SetLightSensorAlarm(Finch finchRobot)
+        {
+            bool quitDataRecorderMenu = false;
+
+
+            AlarmSystem alarm = new AlarmSystem();
+            alarm.monitorType = "light";
+
+            while (!quitDataRecorderMenu)
+            {
+                DisplayScreenHeader("Light Alarm Menu");
+
+                Console.WriteLine("\ta) Set Sensors to Monitor");
+                Console.WriteLine("\tb) Set Range Type");
+                Console.WriteLine("\tc) Set Minimum/Maximum Threshold Value");
+                Console.WriteLine("\td) Set Time to Monitor");
+                Console.WriteLine("\te) Set Alarm");
+                Console.WriteLine("\tq) Return to Main Menu");
+                Console.Write("\t\tEnter Choice:");
+
+                string menuChoice = Console.ReadLine();
+
+                switch (menuChoice)
+                {
+
+                    case "a":
+                        alarm.sensorsToMonitor = AlarmSystem.SetSensorsToMonitor();
+                        break;
+
+                    case "b":
+                        alarm.rangeType = AlarmSystem.SetRangeType();
+                        break;
+
+                    case "c":
+                        alarm.minMaxThresholdValue = AlarmSystem.SetMinMaxThresholdValue(alarm, finchRobot);
+                        break;
+
+                    case "d":
+                        alarm.timeToMonitor = AlarmSystem.SetTimeToMonitor(alarm.monitorType);
+                        break;
+
+                    case "e":
+                        AlarmSystem.SetLightAlarm(finchRobot, alarm);
+                        break;
+
+                    case "q":
+                        quitDataRecorderMenu = true;
+                        break;
+
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("\tPlease enter a letter for the menu choice.");
+                        DisplayContinuePrompt();
+                        break;
+                }
+            }
+        }
+
 
         #endregion
 
@@ -289,7 +463,7 @@ namespace FinchRobotControl
         /// </summary>
         /// <param name="finchRobot">finch robot object</param>
         /// <returns>notify if the robot is connected</returns>
-        static bool DisplayConnectFinchRobot(FinchAPI.Finch finchRobot)
+        static bool DisplayConnectFinchRobot(Finch finchRobot)
         {
             Console.CursorVisible = false;
 
@@ -366,7 +540,7 @@ namespace FinchRobotControl
         /// <summary>
         /// display menu prompt
         /// </summary>
-        static void DisplayMenuPrompt(string menuName)
+        public static void DisplayMenuPrompt(string menuName)
         {
             Console.WriteLine();
             Console.WriteLine($"\tPress any key to return to the {menuName} Menu.");
