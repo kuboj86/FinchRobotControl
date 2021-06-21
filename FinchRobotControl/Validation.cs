@@ -105,5 +105,31 @@ namespace FinchRobotControl
             }
             return choice;
         }
+        public static string ValidateYesNo(string message)
+        {
+            bool isValid = false;
+            string answer = "";
+            while (!isValid)
+            {
+                Console.WriteLine(message);
+                string input = Console.ReadLine().ToLower();
+                if (input == "y")
+                {
+                    isValid = true;
+                    answer = "yes";
+                }
+                else if (input == "n")
+                {
+                    isValid = true;
+                }
+                else
+                {
+                    isValid = false;
+                    Console.Clear();
+                    Console.WriteLine("Im sorry I didn't quite understand your response.\n");
+                }
+            }
+            return answer;
+        }
     }
 }
