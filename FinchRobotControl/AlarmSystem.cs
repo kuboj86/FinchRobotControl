@@ -14,7 +14,6 @@ namespace FinchRobotControl
         public string rangeType { get; set; }
         public int minMaxThresholdValue { get; set; }
         public int timeToMonitor { get; set; }
-        public bool isParametersMet { get; set; }
 
         internal static string GetTypeToMonitor()
         {
