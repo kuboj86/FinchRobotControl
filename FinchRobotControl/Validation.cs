@@ -44,6 +44,32 @@ namespace FinchRobotControl
                 return ValidateIntResponse("I'm sorry I didn't quite get that answer.\n");
             }
         }
+        public static int ValidateIntResponse(string message, int minValue, int maxValue)
+        {
+            bool isValid = false;
+            int selection = 0;
+            while (!isValid)
+            {
+                Console.WriteLine(message);
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out selection))
+                {
+                    if (selection >= minValue && selection <= maxValue)
+                    {
+                        isValid = true;
+                        return selection;
+                    }
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Please select a value from 1 - 255.\n");
+                }
+
+            }
+            return selection;
+        }
         public static double ValidateDoubleResponse(string message)
         {
             Console.WriteLine(message);
@@ -57,6 +83,32 @@ namespace FinchRobotControl
             {
                 return ValidateDoubleResponse("I'm sorry I didn't quite get that answer.\n");
             }
+        }
+        public static double ValidateDoubleResponse(string message, double minValue, double maxValue)
+        {
+            bool isValid = false;
+            double selection = 0;
+            while (!isValid)
+            {
+                Console.WriteLine(message);
+                string input = Console.ReadLine();
+
+                if (double.TryParse(input, out selection))
+                {
+                    if (selection >= minValue && selection <= maxValue)
+                    {
+                        isValid = true;
+                        return selection;
+                    }
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("Please select a value from 1 - 10.\n");
+                }
+
+            }
+            return selection;
         }
         public static string ValidateSensorOption(string message)
         {

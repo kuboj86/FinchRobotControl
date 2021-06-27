@@ -31,7 +31,7 @@ namespace FinchRobotControl
         // Application Type: Console
         // Author: Jason Kubo
         // Dated Created: 1/22/2020
-        // Last Modified: 6/19/2021
+        // Last Modified: 6/25/2021
         //
         // **************************************************
         static void Main(string[] args)
@@ -61,7 +61,7 @@ namespace FinchRobotControl
             bool quitApplication = false;
             string menuChoice;
 
-            FinchAPI.Finch finchRobot = new FinchAPI.Finch();
+            Finch finchRobot = new Finch();
 
             do
             {
@@ -102,7 +102,7 @@ namespace FinchRobotControl
                         break;
 
                     case "e":
-
+                        UserProgrammingDisplayMenuScreen(finchRobot);
                         break;
 
                     case "f":
@@ -122,6 +122,48 @@ namespace FinchRobotControl
                 }
 
             } while (!quitApplication);
+        }
+
+        private static void UserProgrammingDisplayMenuScreen(Finch finchRobot)
+        {
+            string menuChoice;
+            bool quitMenu = false;
+
+            (int motorSpeed, int ledBrightness, double waitSeconds) commandParameters;
+            commandParameters.motorSpeed = 0;
+            commandParameters.ledBrightness = 0;
+            commandParameters.waitSeconds = 0;
+
+            List<Command> commands = new List<Command>();
+            while (!quitMenu)
+            {
+                DisplayScreenHeader("User Programming Menu");
+
+                Console.WriteLine("\ta) Set Command Paramters");
+                Console.WriteLine("\tb) Add Commands");
+                Console.WriteLine("\tc) View Commands");
+                Console.WriteLine("\td) Execute Commands");
+                Console.WriteLine("\tq) Quit\n");
+                Console.Write("\t\tEnter Choice:");
+
+                menuChoice = Console.ReadLine().ToLower();
+
+                switch (menuChoice)
+                {
+                    case "a":
+                        commandParameters = UserProgramming.GetCommandParameters();
+                        break;
+                    case "b":
+                        UserProgramming.GetFinchCommands(commands);
+                        break;
+                    case "c":
+                        UserProgramming.GetSelectedFinchCommands(commands);
+                        break;
+                    case "d":
+                        UserProgramming.ExecuteFinchCommands(commands, finchRobot, (commandParameters.motorSpeed, commandParameters.ledBrightness, commandParameters.waitSeconds));
+                        break;
+                }
+            }
         }
 
 
@@ -326,12 +368,6 @@ namespace FinchRobotControl
 
             List<AlarmSystem> LightAndTemp = new List<AlarmSystem>();
             AlarmSystem alarmToMonitor = new AlarmSystem();
-            //temp.monitorType = "temperature";
-            
-            //AlarmSystem light = new AlarmSystem();
-            //light.monitorType = "light";
-
-
             
             while (!quitDataRecorderMenu)
             {
