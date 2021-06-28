@@ -21,7 +21,7 @@ namespace FinchRobotControl
 
             commandParameters.motorSpeed = Validation.ValidateIntResponse("Enter in the Motor Speed of 1 - 255", 1, 255);
             commandParameters.ledBrightness = Validation.ValidateIntResponse("Enter in the LED Brightness of 1 - 255", 1, 255);
-            commandParameters.waitSeconds = Validation.ValidateDoubleResponse("Enter in the", 1, 10);
+            commandParameters.waitSeconds = Validation.ValidateDoubleResponse("Enter in the Wait time in seconds", 1, 10);
 
             Console.WriteLine();
             Console.WriteLine($"Motor Speed: {commandParameters.motorSpeed}");
@@ -48,6 +48,7 @@ namespace FinchRobotControl
 
             while(command != Command.DONE)
             {
+                Console.WriteLine();
                 Console.WriteLine("Enter a command:");
 
                 if(Enum.TryParse(Console.ReadLine().ToUpper(), out command))
@@ -94,7 +95,7 @@ namespace FinchRobotControl
             string commandName = "";
             const int TURNIN_MOTOR_SPEED = 100;
 
-            Program.DisplayScreenHeader("Execute Finch COmmands");
+            Program.DisplayScreenHeader("Execute Finch Commands");
 
             Console.WriteLine("The finch robot is ready to execute the list of commands");
             Program.DisplayContinuePrompt();
@@ -146,6 +147,24 @@ namespace FinchRobotControl
                         commandName = Command.LEDOFF.ToString();
                         break;
 
+                    case Command.NOTEON:
+                        finchRobot.noteOn(2093);
+                        commandName = Command.NOTEON.ToString();
+                        break;
+
+                    case Command.NOTEOFF:
+                        finchRobot.noteOff();
+                        commandName = Command.NOTEOFF.ToString();
+                        break;
+                    case Command.PLAYMUSIC:
+                        TalentShow.TalentShowDisplayLightAndSound(finchRobot, TURNIN_MOTOR_SPEED);
+                        commandName = Command.PLAYMUSIC.ToString();
+                        break;
+
+                    case Command.GETTEMP:
+                        commandName = $"Current Temp: {finchRobot.getTemperature().ToString("n2")}";
+                        break;
+
                     case Command.DONE:
                         commandName = Command.DONE.ToString();
                         break;
@@ -158,6 +177,8 @@ namespace FinchRobotControl
                 Console.WriteLine($"{commandName}");
             }
 
+            finchRobot.setMotors(0, 0);
+            finchRobot.noteOff();
             Program.DisplayMenuPrompt("User Programming");
         }
     }

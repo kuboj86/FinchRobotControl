@@ -18,7 +18,10 @@ namespace FinchRobotControl
         TURNLEFT,
         LEDON,
         LEDOFF,
-        GETTEMPERATURE,
+        NOTEON,
+        NOTEOFF,
+        GETTEMP,
+        PLAYMUSIC,
         DONE
     }
     class Program
@@ -86,7 +89,7 @@ namespace FinchRobotControl
                 switch (menuChoice)
                 {
                     case "a":
-                        DisplayConnectFinchRobot(finchRobot);
+                        FinchConnectivity.DisplayConnectFinchRobot(finchRobot);
                         break;
 
                     case "b":
@@ -106,11 +109,11 @@ namespace FinchRobotControl
                         break;
 
                     case "f":
-                        DisplayDisconnectFinchRobot(finchRobot);
+                        FinchConnectivity.DisplayDisconnectFinchRobot(finchRobot);
                         break;
 
                     case "q":
-                        DisplayDisconnectFinchRobot(finchRobot);
+                        FinchConnectivity.DisplayDisconnectFinchRobot(finchRobot);
                         quitApplication = true;
                         break;
 
@@ -161,6 +164,9 @@ namespace FinchRobotControl
                         break;
                     case "d":
                         UserProgramming.ExecuteFinchCommands(commands, finchRobot, (commandParameters.motorSpeed, commandParameters.ledBrightness, commandParameters.waitSeconds));
+                        break;
+                    case "q":
+                        quitMenu = true;
                         break;
                 }
             }
@@ -323,9 +329,9 @@ namespace FinchRobotControl
 
             while (!quitDataRecorderMenu)
             {
-                DisplayScreenHeader("Light Alarm Menu");
+                DisplayScreenHeader("Alarm Menu");
 
-                Console.WriteLine("\ta) Monitor Light or Temperature");
+                Console.WriteLine("\ta) Alarm Type?\n");
                 Console.WriteLine("\tq) Return to Main Menu");
                 Console.Write("\t\tEnter Choice:");
 
@@ -377,20 +383,35 @@ namespace FinchRobotControl
                     if (i == 0)
                     {
                         alarmToMonitor = SetTemperatureSensorAlarm(finchRobot, "Temperature");
+                        if(alarmToMonitor.quitToMenu == true)
+                        {
+                            break;
+                        }
                     }
                     else
                     {
                         alarmToMonitor = SetLightSensorAlarm(finchRobot, "Light");
+                        if (alarmToMonitor.quitToMenu == true)
+                        {
+                            break;
+                        }
                     }
                     LightAndTemp.Add(alarmToMonitor);
                 }
                 quitDataRecorderMenu = true;
             }
-            Console.Clear();
-            string response = Validation.ValidateYesNo($"Set alarm? Y/N");
-            if (response == "yes")
+            if(LightAndTemp.Count == 2)
             {
-                AlarmSystem.SetLightAndTempAlarm(finchRobot, LightAndTemp);
+                Console.Clear();
+                string response = Validation.ValidateYesNo($"\tReady to Set alarms for Light and Temperature? Y/N");
+                if (response == "yes")
+                {
+                    AlarmSystem.SetLightAndTempAlarm(finchRobot, LightAndTemp);
+                }
+                else
+                {
+                    Console.WriteLine("OK, returning to the main menu");
+                }
             }
             else
             {
@@ -462,6 +483,7 @@ namespace FinchRobotControl
                 Console.WriteLine("\ta) Set Range Type");
                 Console.WriteLine("\tb) Set Minimum/Maximum Threshold Value");
                 Console.WriteLine("\tc) Set Time to Monitor");
+                Console.WriteLine("\td) Set Light Alarm Parameters");
                 Console.WriteLine("\tq) Return to Main Menu");
                 Console.Write("\t\tEnter Choice:");
 
@@ -481,8 +503,12 @@ namespace FinchRobotControl
                     case "c":
                         alarm.timeToMonitor = AlarmSystem.SetTimeToMonitor(alarm.monitorType);
                         break;
+                    case "d":
+                        quitDataRecorderMenu = true;
+                        break;
                     case "q":
                         quitDataRecorderMenu = true;
+                        alarm.quitToMenu = true;
                         break;
 
                     default:
@@ -491,6 +517,7 @@ namespace FinchRobotControl
                         DisplayContinuePrompt();
                         break;
                 }
+
             }
             return alarm;
         }
@@ -568,6 +595,7 @@ namespace FinchRobotControl
                 Console.WriteLine("\tb) Set Range Type");
                 Console.WriteLine("\tc) Set Minimum/Maximum Threshold Value");
                 Console.WriteLine("\td) Set Time to Monitor");
+                Console.WriteLine("\te) Set Alarm");
                 Console.WriteLine("\tq) Return to Main Menu");
                 Console.Write("\t\tEnter Choice:");
 
@@ -591,9 +619,13 @@ namespace FinchRobotControl
                     case "d":
                         alarm.timeToMonitor = AlarmSystem.SetTimeToMonitor(alarm.monitorType);
                         break;
+                    case "e":
+                        quitDataRecorderMenu = true;
+                        break;
 
                     case "q":
                         quitDataRecorderMenu = true;
+                        alarm.quitToMenu = true;
                         break;
 
                     default:
@@ -606,65 +638,6 @@ namespace FinchRobotControl
             return alarm;
         }
 
-
-        #endregion
-
-        #region FINCH ROBOT MANAGEMENT
-
-        /// <summary>
-        /// *****************************************************************
-        /// *               Disconnect the Finch Robot                      *
-        /// *****************************************************************
-        /// </summary>
-        /// <param name="finchRobot">finch robot object</param>
-        static void DisplayDisconnectFinchRobot(FinchAPI.Finch finchRobot)
-        {
-            Console.CursorVisible = false;
-
-            DisplayScreenHeader("Disconnect Finch Robot");
-
-            Console.WriteLine("\tAbout to disconnect from the Finch robot.");
-            DisplayContinuePrompt();
-
-            finchRobot.disConnect();
-
-            Console.WriteLine("\tThe Finch robot is now disconnect.");
-
-            DisplayMenuPrompt("Main Menu");
-        }
-
-        /// <summary>
-        /// *****************************************************************
-        /// *                  Connect the Finch Robot                      *
-        /// *****************************************************************
-        /// </summary>
-        /// <param name="finchRobot">finch robot object</param>
-        /// <returns>notify if the robot is connected</returns>
-        static bool DisplayConnectFinchRobot(Finch finchRobot)
-        {
-            Console.CursorVisible = false;
-
-            bool robotConnected;
-
-            DisplayScreenHeader("Connect Finch Robot");
-
-            Console.WriteLine("\tAbout to connect to Finch robot. Please be sure the USB cable is connected to the robot and computer now.");
-            DisplayContinuePrompt();
-
-            robotConnected = finchRobot.connect();
-
-            // TODO test connection and provide user feedback - text, lights, sounds
-
-            DisplayMenuPrompt("Main Menu");
-
-            //
-            // reset finch robot
-            //
-            finchRobot.setLED(0, 0, 0);
-            finchRobot.noteOff();
-
-            return robotConnected;
-        }
 
         #endregion
 
