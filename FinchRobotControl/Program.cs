@@ -34,7 +34,7 @@ namespace FinchRobotControl
         // Application Type: Console
         // Author: Jason Kubo
         // Dated Created: 1/22/2020
-        // Last Modified: 6/25/2021
+        // Last Modified: 6/27/2021
         //
         // **************************************************
         static void Main(string[] args)
@@ -78,7 +78,8 @@ namespace FinchRobotControl
                 Console.WriteLine("\tc) Data Recorder");
                 Console.WriteLine("\td) Alarm System");
                 Console.WriteLine("\te) User Programming");
-                Console.WriteLine("\tf) Disconnect Finch Robot");
+                Console.WriteLine("\tf) Login / Registration");
+                Console.WriteLine("\tg) Disconnect Finch Robot");
                 Console.WriteLine("\tq) Quit\n");
                 Console.Write("\t\tEnter Choice:");
                 menuChoice = Console.ReadLine().ToLower();
@@ -109,6 +110,10 @@ namespace FinchRobotControl
                         break;
 
                     case "f":
+                        UserRegistration.LoginRegistrationMenuScreen();
+                        break;
+
+                    case "g":
                         FinchConnectivity.DisplayDisconnectFinchRobot(finchRobot);
                         break;
 
@@ -142,7 +147,7 @@ namespace FinchRobotControl
             {
                 DisplayScreenHeader("User Programming Menu");
 
-                Console.WriteLine("\ta) Set Command Paramters");
+                Console.WriteLine("\ta) Set Command Parameters");
                 Console.WriteLine("\tb) Add Commands");
                 Console.WriteLine("\tc) View Commands");
                 Console.WriteLine("\td) Execute Commands");
@@ -331,7 +336,7 @@ namespace FinchRobotControl
             {
                 DisplayScreenHeader("Alarm Menu");
 
-                Console.WriteLine("\ta) Alarm Type?\n");
+                Console.WriteLine("\ta) Alarm Type\n");
                 Console.WriteLine("\tq) Return to Main Menu");
                 Console.Write("\t\tEnter Choice:");
 

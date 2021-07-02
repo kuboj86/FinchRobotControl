@@ -173,6 +173,7 @@ namespace FinchRobotControl
                 else if (input == "n")
                 {
                     isValid = true;
+                    answer = "no";
                 }
                 else
                 {

@@ -156,6 +156,7 @@ namespace FinchRobotControl
                         finchRobot.noteOff();
                         commandName = Command.NOTEOFF.ToString();
                         break;
+
                     case Command.PLAYMUSIC:
                         TalentShow.TalentShowDisplayLightAndSound(finchRobot, TURNIN_MOTOR_SPEED);
                         commandName = Command.PLAYMUSIC.ToString();

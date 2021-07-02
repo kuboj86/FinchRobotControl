@@ -56,10 +56,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TalentShow.cs" />
     <Compile Include="UserProgramming.cs" />
+    <Compile Include="UserRegistration.cs" />
     <Compile Include="Validation.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\Users.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
