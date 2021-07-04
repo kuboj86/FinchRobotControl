@@ -12,7 +12,7 @@ namespace FinchRobotControl
         internal static void LoginRegistrationMenuScreen()
         {
             Program.DisplayScreenHeader("Login Menu");
-
+            (string userName, string password) userCredentials;
             string choice;
             choice = Validation.ValidateYesNo("Are you already Registered? Y/N\n");
             switch (choice)
@@ -22,7 +22,8 @@ namespace FinchRobotControl
                 break;
 
                 case "no":
-                    RegisterNewUser();
+                    userCredentials = RegisterNewUser();
+                    InsertNewUser(userCredentials);
                     UserLogin();
 
                     break;
@@ -33,33 +34,26 @@ namespace FinchRobotControl
             }
         }
 
-        private static void RegisterNewUser()
+        private static (string userName, string password) RegisterNewUser()
         {
-            string userName;
-            string password;
+            (string userName, string password) userCredentials;
 
             Program.DisplayScreenHeader("Register New User");
 
             Console.WriteLine("Enter in Username");
-            userName = Console.ReadLine();
+            userCredentials.userName = Console.ReadLine();
             Console.WriteLine("Enter in Password");
-            password = Console.ReadLine();
+            userCredentials.password = Console.ReadLine();
 
-            InsertNewUser(userName, password);
-
-            Console.WriteLine($"Username : {userName}");
-            Console.WriteLine($"Password : {password}");
+            Console.WriteLine($"Username : {userCredentials.userName}");
+            Console.WriteLine($"Password : {userCredentials.password}");
 
             Program.DisplayContinuePrompt();
+
+            return userCredentials;
         }
 
-        private static void InsertNewUser(string userName, string password)
-        {
-            string directory = $"Data/Users.txt";
-            string entry = $"{userName},{password}";
 
-            File.WriteAllText(directory, entry);
-        }
 
         private static void UserLogin()
         {
@@ -81,6 +75,7 @@ namespace FinchRobotControl
                 if (isValid)
                 {
                     Console.WriteLine($"You are now logged in {userName}!");
+                    CreateNewUsersScreen();
                 }
                 else
                 {
@@ -91,14 +86,77 @@ namespace FinchRobotControl
             }
         }
 
+        private static void CreateNewUsersScreen()
+        {
+            Program.DisplayScreenHeader("Add New Users Screen");
+            try
+            {
+                List<(string userName, string password)> userList = new List<(string userName, string password)>();
+                List<string> userCredentials = new List<string>();
+
+                (string userName, string password) userCredential;
+
+                bool isContinue = true;
+                string choice;
+                while (isContinue)
+                {
+                    choice = Validation.ValidateYesNo("Would you like to add more user? Y/N\n");
+
+                    switch (choice)
+                    {
+                        case "yes":
+                            userCredential = RegisterNewUser();
+                            userList.Add(userCredential);
+                            break;
+                        case "no":
+                            isContinue = false;
+                            break;
+                    }
+                }
+                foreach (var userCred in userList)
+                {
+                    string entry = $"{userCred.userName},{userCred.password}";
+                    userCredentials.Add(entry);
+                }
+                InsertNewUserList(userCredentials);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
+        }
+        private static void InsertNewUser((string userName, string password) userCredentials)
+        {
+            string directory = $"Data/Users.txt";
+            string entry = $"{userCredentials.userName},{userCredentials.password}";
+
+            File.WriteAllText(directory, entry);
+        }
+        private static void InsertNewUserList(List<string> userList)
+        {
+            string directory = $"Data/Users.txt";
+
+            File.WriteAllLines(directory, userList);
+        }
+
         private static bool GetValidUserInfo(string userName, string password)
         {
             List<(string userName, string password)> userCredentials = new List<(string userName, string password)>();
-            bool isValid;
+            bool isValid = false;
 
             userCredentials = GetUserInfoData();
 
-            isValid = (userCredentials.userName == userName && userCredentials.password == password);
+            foreach ((string userName, string password) userLoginInfo in userCredentials)
+            {
+                if((userLoginInfo.userName == userName) && (userLoginInfo.password == password))
+                {
+                    isValid = true;
+                    break;
+                }
+            }
+            
 
             return isValid;
         }
@@ -113,13 +171,19 @@ namespace FinchRobotControl
 
             List<(string userName, string password)> registeredUsers = new List<(string userName, string password)>();
 
-            credentials = File.ReadAllText(file);
+            credentialArray = File.ReadAllLines(file);
 
-            credentialArray = credentials.Split(',');
-            loginInfo.userName = credentialArray[0];
-            loginInfo.password = credentialArray[1];
+            foreach (var item in credentialArray)
+            {
+                credentialArray = item.Split(',');
+                loginInfo.userName = credentialArray[0];
+                loginInfo.password = credentialArray[1];
 
-            return loginInfo;
+                registeredUsers.Add(loginInfo);
+
+            }
+
+            return registeredUsers;
         }
     }
 }
